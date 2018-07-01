@@ -7,6 +7,7 @@ yarn-error.log*
 
 app/config
 app/config/*
+app/db/scripts/init.sql
 
 # Runtime data
 pids
