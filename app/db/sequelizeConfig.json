@@ -1,0 +1,15 @@
+{
+    "development": {
+        "username": "app_user",
+        "password": "Password!",
+        "database": "coffee",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "dialect": "mysql",
+        "operatorsAliases": false,
+        "seederStorage": "sequelize",
+        "define": {
+            "underscored": true
+        }
+    }
+}
