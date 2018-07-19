@@ -36,11 +36,6 @@ export default function(sequelize, Sequelize) {
 			allowNull: false,
 			field: "last_name"
 		},
-		preferredName: {
-			type: Sequelize.STRING(45),
-			allowNull: false,
-			field: "preferred_name"
-		},
 		email: {
 			type: Sequelize.STRING(45),
 			allowNull: false
@@ -80,7 +75,7 @@ export default function(sequelize, Sequelize) {
 		return Users.find({where: {email: email, uuid: uuid}})
 	}
 
-	Users.signup = function(email, password, firstName, lastName, consented, preferredName, phone, user_type) {
+	Users.signup = function(email, password, firstName, lastName, consented, phone, user_type, preferredName) {
 		let signupAction = new Promise((resolve, reject) => {	
 			Users.find({where: {email}})
 			.then(function(user) {
@@ -100,9 +95,6 @@ export default function(sequelize, Sequelize) {
 						phone,
 						user_type
 					}
-					//if (preferredName !== undefined && preferredName !== null) {
-						//newUser.preferred_name = preferredName
-					//}
 					Users.create(newUser)
 					.then(function(result) {
 						entities.AccountActionTypes.get('signup')

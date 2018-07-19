@@ -28,7 +28,7 @@ router.post('users/signup', function(req, res, next) {
 		res.json({result:false, exception: "User type is required but not given."})
 	} else {
 		const data = req.body
-		entities.Users.signup(data.email, data.password, data.first_name, data.last_name, data.consented, data.preferred_name, data.phone, data.user_type)
+		entities.Users.signup(data.email, data.password, data.first_name, data.last_name, data.consented, data.phone, data.user_type, data.preferred_name)
 		.then(function(result) {
 			res.json({result:true})
 		}).catch(function(err) {
