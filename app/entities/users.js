@@ -25,16 +25,21 @@ export default function(sequelize, Sequelize) {
 			allowNull: false,
 			field: "first_name"
 		},
-		middleName: {
+		preferredName: {
 			type: Sequelize.STRING(45),
 			allowNull: false,
 			defaultValue: '',
-			field: "middle_name"
+			field: "preferred_name"
 		},
 		lastName: {
 			type: Sequelize.STRING(45),
 			allowNull: false,
 			field: "last_name"
+		},
+		preferredName: {
+			type: Sequelize.STRING(45),
+			allowNull: false,
+			field: "preferred_name"
 		},
 		email: {
 			type: Sequelize.STRING(45),
@@ -44,6 +49,16 @@ export default function(sequelize, Sequelize) {
 			type: Sequelize.BOOLEAN,
 			allowNull: false,
 			defaultValue: false
+		},
+		phone: {
+			type: Sequelize.INTEGER(11),
+			allowNull: false,
+			field: "phone"
+		},
+		user_type: {
+			type: Sequelize.STRING(45),
+			allowNull: false,
+			field: "user_type"
 		}
 	}, {
 		tableName: 'users',
@@ -65,7 +80,7 @@ export default function(sequelize, Sequelize) {
 		return Users.find({where: {email: email, uuid: uuid}})
 	}
 
-	Users.signup = function(email, password, firstName, lastName, consented, middleName) {
+	Users.signup = function(email, password, firstName, lastName, consented, preferredName, phone, user_type) {
 		let signupAction = new Promise((resolve, reject) => {	
 			Users.find({where: {email}})
 			.then(function(user) {
@@ -73,7 +88,7 @@ export default function(sequelize, Sequelize) {
 					console.log(password)
 					const hashedPassword = hash(password)
 					const uuidv4 = uuid.v4()
-					const middle = !middleName ? '' : middleName
+					const preferredName = !preferredName ? '' : preferredName
 					let newUser = {
 						email,
 						password: hashedPassword,
@@ -81,11 +96,13 @@ export default function(sequelize, Sequelize) {
 						lastName,
 						uuid: uuidv4,
 						consented,
-						middleName: middle
+						preferredName: preferredName,
+						phone,
+						user_type
 					}
-					if (middleName !== undefined && middleName !== null) {
-						newUser.middle_name = middleName
-					}
+					//if (preferredName !== undefined && preferredName !== null) {
+						//newUser.preferred_name = preferredName
+					//}
 					Users.create(newUser)
 					.then(function(result) {
 						entities.AccountActionTypes.get('signup')
