@@ -34,7 +34,6 @@ app.use(function(req, res, next) {
 	next()
 })
 
-
 // error handlers
 app.use(function(err, req, res, next) {
 	appLogger.error(err)
