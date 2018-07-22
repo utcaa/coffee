@@ -19,7 +19,7 @@ up: function (queryInterface, Sequelize) {
 			type: Sequelize.STRING,
 			allowNull: false
 		}
-	  ),
+		),
 		queryInterface.addColumn(
 		'users',
 		'preferred_name',
