@@ -80,7 +80,6 @@ export default function(sequelize, Sequelize) {
 			Users.find({where: {email}})
 			.then(function(user) {
 				if (!user) {
-					console.log(password)
 					const hashedPassword = hash(password)
 					const uuidv4 = uuid.v4()
 					const preferredName = !preferredName ? '' : preferredName
