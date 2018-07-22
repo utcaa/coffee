@@ -30,7 +30,7 @@ up: function (queryInterface, Sequelize) {
 		),
 		queryInterface.removeColumn(
 		'users',
-		'middle_name',
+		'middle_name'
 		)
 	];
 },
