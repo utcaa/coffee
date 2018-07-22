@@ -16,7 +16,7 @@ up: function (queryInterface, Sequelize) {
       	'users',
         'phone',
         {
-          type: Sequelize.INTEGER,
+          type: Sequelize.STRING,
           allowNull: false
         }
       ),
@@ -41,7 +41,7 @@ down: function (queryInterface, Sequelize) {
         'users',
         'middle_name',
         {
-          type: Sequelize.INTEGER,
+          type: Sequelize.STRING,
           allowNull: false
         }
       ),
