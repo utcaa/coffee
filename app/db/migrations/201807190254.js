@@ -27,12 +27,24 @@ up: function (queryInterface, Sequelize) {
           type: Sequelize.STRING,
           allowNull: false
         }
+      ),
+      queryInterface.removeColumn(
+        'users',
+        'middle_name',
       )
     ];
 },
 
 down: function (queryInterface, Sequelize) {
     return [
+      queryInterface.addColumn(
+        'users',
+        'middle_name',
+        {
+          type: Sequelize.INTEGER,
+          allowNull: false
+        }
+      ),
       queryInterface.removeColumn('users', 'preferred_name'),
       queryInterface.removeColumn('users', 'phone'),
       queryInterface.removeColumn('users', 'user_type')
