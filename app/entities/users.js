@@ -46,7 +46,7 @@ export default function(sequelize, Sequelize) {
 			defaultValue: false
 		},
 		phone: {
-			type: Sequelize.INTEGER(11),
+			type: Sequelize.STRING(11),
 			allowNull: false,
 			field: "phone"
 		},
