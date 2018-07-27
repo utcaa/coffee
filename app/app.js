@@ -24,7 +24,7 @@ app.use(function(req, res, next) {
 })
 
 router.use('/', indexControllers)
-router.use('/users/signup', userControllers)
+router.use('/users', userControllers)
 app.use('/coffee', router)
 
 app.use(function(req, res, next) {

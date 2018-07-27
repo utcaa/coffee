@@ -4,7 +4,7 @@ import { USER_ID_COOKIE, EMAIL_COOKIE, SESSION_ID_COOKIE } from '../util/cookieH
 
 let router = express.Router()
 
-router.post('users/signup', function(req, res, next) {
+router.post('/signup', function(req, res, next) {
 	if (!req.body.email === undefined) {
 		console.log('Email is required but not given.')
 		res.json({result:false, exception: "Email is required but not given."})
