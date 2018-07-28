@@ -1,6 +1,6 @@
 const { Op } = require('sequelize')
 import entities from '../entities'
-import { addDays } from '../utils/dateHandlers'
+import { addDays } from '../util/dateHandlers'
 
 export default function(sequelize, Sequelize) {
 	let UserSessions = sequelize.define('UserSessions', {

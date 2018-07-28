@@ -4,6 +4,7 @@ import corsFilter from 'cors'
 import cuid from 'cuid'
 import appLogger from './util/logger'
 import indexControllers from './controllers/indexControllers'
+import userControllers from './controllers/userControllers'
 
 const app = express()
 let router = express.Router()
@@ -23,7 +24,7 @@ app.use(function(req, res, next) {
 })
 
 router.use('/', indexControllers)
-
+router.use('/users', userControllers)
 app.use('/coffee', router)
 
 app.use(function(req, res, next) {
