@@ -26,5 +26,14 @@ export default function(sequelize, Sequelize) {
 		Cities.belongsTo(entities.Provinces)
 		Cities.hasMany(entities.Addresses)
 	}
+
+	/**above are DB settings of the entity. below are 
+	the business logics of AccountActionType entity.
+	**/
+
+	Cities.getById = function(id) {
+		return Cities.find({where: {id}})
+	}
+
 	return Cities
 }

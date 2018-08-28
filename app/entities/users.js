@@ -66,6 +66,7 @@ export default function(sequelize, Sequelize) {
 	Users.associate = function(entities) {
 		Users.hasMany(entities.UserHistory)
 		Users.hasMany(entities.UserSessions)
+		Users.hasMany(entities.WorkExperience)
 	}
 
 	/**above are DB settings of the entity. below are 
@@ -73,6 +74,10 @@ export default function(sequelize, Sequelize) {
 	**/
 	Users.getByEmailAndUUId = function(email, uuid) {
 		return Users.find({where: {email: email, uuid: uuid}})
+	}
+
+	Users.getByUUId = function(uuid) {
+		return Users.find({where: {uuid}})
 	}
 
 	Users.signup = function(email, password, firstName, lastName, consented, phone, user_type, preferredName) {
