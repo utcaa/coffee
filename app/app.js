@@ -4,6 +4,7 @@ import corsFilter from 'cors'
 import cuid from 'cuid'
 import appLogger from './util/logger'
 import indexControllers from './controllers/indexControllers'
+import chatControllers from './controllers/chatControllers'
 import userControllers from './controllers/userControllers'
 
 const app = express()
@@ -25,6 +26,7 @@ app.use(function(req, res, next) {
 
 router.use('/', indexControllers)
 router.use('/users', userControllers)
+router.use('/chat', chatControllers)
 app.use('/coffee', router)
 
 app.use(function(req, res, next) {

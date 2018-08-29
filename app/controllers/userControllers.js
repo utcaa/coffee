@@ -1,6 +1,6 @@
 import express from 'express'
 import entities from '../entities'
-import userService from '../services/userService'
+import userServices from '../services/userServices'
 import { USER_ID_COOKIE, EMAIL_COOKIE, SESSION_ID_COOKIE } from '../util/cookieHelpers'
 
 let router = express.Router()
@@ -75,7 +75,7 @@ router.post('/:user_id/professional_experience', function(req, res, next) {
 		next()
 	}
 	const data = req.body
-	userService.addWorkExperience(data.industry_id, req.params.user_id, data.role_id, data.location_id, 
+	userServices.addWorkExperience(data.industry_id, req.params.user_id, data.role_id, data.location_id, 
 									data.start_year, data.start_month, data.end_year, data.end_month)
 		.then(result => {
 			res.response = {result:true}

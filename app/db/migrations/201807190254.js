@@ -32,7 +32,7 @@ up: function (queryInterface, Sequelize) {
 		'users',
 		'middle_name',
 		)
-	];
+	]
 },
 
 down: function (queryInterface, Sequelize) {
@@ -48,6 +48,6 @@ down: function (queryInterface, Sequelize) {
 		queryInterface.removeColumn('users', 'preferred_name'),
 		queryInterface.removeColumn('users', 'phone'),
 		queryInterface.removeColumn('users', 'user_type')
-	];
+	]
 	}
-};
+}
