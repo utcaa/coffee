@@ -1,5 +1,6 @@
 import express from 'express'
 import chatServices from '../services/chatServices'
+const csvParser = require("csvtojson")
 
 let router = express.Router()
 
@@ -27,14 +28,27 @@ router.post('/request', function(req, res, next) {
 		next()
 	}
 	chatServices.request(req.body.student_id, req.body.interest_industry_id, 
-							req.body.interest_role_id, req.body.location_id, {
-							secondaryIndustryId: req.body.second_interest_industry_id })
+							req.body.interest_role_id, req.body.location_id, 
+							{ secondaryIndustryId: req.body.second_interest_industry_id,
+									goal: req.body.goal, comments: req.body.comments, 
+									challenge: req.body.challenge })
 	.then(function(result) {
 		res.response = {result:result}
 		next()
 	}).catch(function(err) {
 		console.log(err)
 		res.response = {result:false, exception: err.message}
+		next()
+	})
+})
+
+router.post('/request/from-csv', function(req, res, next) {
+	const csvData = []
+	let count = 0
+	csvParser({delimiter: "|"}).fromFile('./app/files/request.bsv')
+	.then(data => {
+		chatServices.buldRequest(data)
+		res.response = {result: data.length}
 		next()
 	})
 })

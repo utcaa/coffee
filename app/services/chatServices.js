@@ -1,5 +1,17 @@
 import entities from '../entities'
 
+function buldRequest(requests) {
+	const allPromises = []
+	requests.map(req => {
+		allPromises.push(request(req.student_id, req.interest_industry_id, 
+							req.interest_role_id, req.location_id,
+							{ secondaryIndustryId: req.second_interest_industry_id, 
+									goal: req.goal, comments: req.comments, 
+									challenge: req.challenge }))
+	})
+	return Promise.all(allPromises)
+}
+
 function request(studentId, industryId, roleId, locationId, { secondaryIndustryId, goal, challenge, comments }) {
 	return new Promise((resolve, reject) => {
 		entities.Users.getByCriteria({uuid: studentId, userTypeId: 1})
@@ -65,5 +77,6 @@ function request(studentId, industryId, roleId, locationId, { secondaryIndustryI
 }
 
 module.exports = {
+	buldRequest,
 	request
 }
