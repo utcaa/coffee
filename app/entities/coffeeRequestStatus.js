@@ -19,7 +19,7 @@ export default function(sequelize, Sequelize) {
 	})
 
 	CoffeeRequestStatus.associate = function(entities) {
-		Users.hasMany(entities.CoffeeRequests)
+		CoffeeRequestStatus.hasMany(entities.CoffeeRequests)
 	}
 
 	/**above are DB settings of the entity. below are 

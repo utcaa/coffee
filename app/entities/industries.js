@@ -29,5 +29,9 @@ export default function(sequelize, Sequelize) {
 		return Industries.find({where: {id}})
 	}
 
+	Industries.list = function() {
+		return Industries.findAll();
+	}
+
 	return Industries
 }

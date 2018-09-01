@@ -26,6 +26,11 @@ up: function(queryInterface, Sequelize) {
 			allowNull: false,
 			isUnique: true
 		},
+		uuid: {
+			type: Sequelize.STRING(45),
+			allowNull: false,
+			isUnique: true
+		},
 		student_id: {
 			type: Sequelize.INTEGER(11),
 			allowNull: false,
@@ -49,6 +54,21 @@ up: function(queryInterface, Sequelize) {
 				model: 'coffee_request_status',
 				key: 'id'
 			}
+		},
+		goal: {
+			type: Sequelize.STRING(255),
+			allowNull: false,
+			defaultValue: ''
+		},
+		challenge: {
+			type: Sequelize.STRING(255),
+			allowNull: false,
+			defaultValue: ''
+		},
+		comments: {
+			type: Sequelize.STRING(255),
+			allowNull: false,
+			defaultValue: ''
 		},
 		created_at: {
 			type: Sequelize.DATE,

@@ -1,5 +1,13 @@
 import entities from '../entities'
 
+function addWorkExperiences(experiences) {
+	const allPromises = []
+	experiences.map(exp => {
+		allPromises.push(addWorkExperience(exp.industry_id, exp.user_id, exp.role_id, exp.location_id, 
+									exp.start_year, exp.start_month, exp.end_year, exp.end_month))})
+	return Promise.all(allPromises)
+}
+
 function addWorkExperience(industryId, userUUId, roleId, locationId, startYear, startMonth, endYear = "0", endMonth = "0") {
 	return new Promise((resolve, reject) => {
 		entities.Industries.getById(industryId)
@@ -7,7 +15,7 @@ function addWorkExperience(industryId, userUUId, roleId, locationId, startYear, 
 				if (!industry) {
 					reject(Error('Input industry does not exist.'))
 				} else {
-					entities.Users.getByUUId(userUUId)
+					entities.Users.getByCriteria({uuid: userUUId, user_type_id: 1})
 					.then(user => {
 						if (!user) {
 							reject(Error('Input user does not exist.'))
@@ -64,5 +72,6 @@ function addWorkExperience(industryId, userUUId, roleId, locationId, startYear, 
 }
 
 module.exports = {
+	addWorkExperiences,
 	addWorkExperience
 }

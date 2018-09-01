@@ -1,33 +1,39 @@
 import entities from '../entities'
 
-function request(studentId, industryId, roleId, locationId, secondaryIndustryId) {
+function request(studentId, industryId, roleId, locationId, { secondaryIndustryId, goal, challenge, comments }) {
 	return new Promise((resolve, reject) => {
-		entities.Users.getByUUId(studentId)
+		entities.Users.getByCriteria({uuid: studentId, userTypeId: 1})
 		.then(student => {
-			entities.WorkExperience.find({
+			entities.WorkExperience.findAll({
 				industryId,
 				roleId,
 				locationId
 			}).then(experience => {
 				if (!experience && secondaryIndustryId) {
-					entities.WorkExperience.find({
+					entities.WorkExperience.findAll({
 						industryId,
 						roleId,
 						locationId
 					}).then(experience2 => {
 						if (!experience2) {
-							entities.CoffeeRequestStatus.create({
+							entities.CoffeeRequests.create({
 								studentId: student.id,
 								professionalId: 0,
-								status_id: 2, //pending
+								statusId: 2, //pending
+								goal,
+								challenge,
+								comments,
 							})
 						} else {
-							entities.CoffeeRequestStatus.create({
+							entities.CoffeeRequests.create({
 								studentId: student.id,
-								professionalId: experience2.userId,
-								status_id: 3, //completed
-							}).then(function() {
-								resolve(experience2[0].userId)
+								professionalId: experience2[0].userId,
+								statusId: 3, //completed
+								goal,
+								challenge,
+								comments,
+							}).then(function(result) {
+								resolve(result.id)
 							}).catch(err => {
 								reject(err)
 							})
@@ -36,12 +42,15 @@ function request(studentId, industryId, roleId, locationId, secondaryIndustryId)
 						reject(err)
 					})
 				} else {
-					entities.CoffeeRequestStatus.create({
+					entities.CoffeeRequests.create({
 						studentId: student.id,
-						professionalId: experience.userId,
-						status_id: 3, //completed
-					}).then(function() {
-						resolve(experience[0].userId)
+						professionalId: experience[0].userId,
+						statusId: 3, //completed
+						goal,
+						challenge,
+						comments,
+					}).then(function(result) {
+						resolve(result.id)
 					}).catch(err => {
 						reject(err)
 					})
@@ -52,5 +61,9 @@ function request(studentId, industryId, roleId, locationId, secondaryIndustryId)
 		}).catch(err => {
 			reject(err)
 		})
-	}
+	})
+}
+
+module.exports = {
+	request
 }

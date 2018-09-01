@@ -33,5 +33,9 @@ export default function(sequelize, Sequelize) {
 		return Roles.find({where: {id}})
 	}
 
+	Roles.list = function() {
+		return Roles.findAll();
+	}
+
 	return Roles
 }

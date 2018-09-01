@@ -50,10 +50,11 @@ export default function(sequelize, Sequelize) {
 			allowNull: false,
 			field: "phone"
 		},
-		user_type: {
-			type: Sequelize.STRING(45),
+		userTypeId: {
+			type: Sequelize.INTEGER(11),
+			defaultValue: 1,
 			allowNull: false,
-			field: "user_type"
+			field: "user_type_id"
 		}
 	}, {
 		tableName: 'users',
@@ -75,12 +76,12 @@ export default function(sequelize, Sequelize) {
 	Users.getByEmailAndUUId = function(email, uuid) {
 		return Users.find({where: {email: email, uuid: uuid}})
 	}
-
-	Users.getByUUId = function(uuid) {
-		return Users.find({where: {uuid}})
+	
+	Users.getByCriteria = function(criteria) {
+		return Users.find(criteria)
 	}
 
-	Users.signup = function(email, password, firstName, lastName, consented, phone, user_type, preferredName) {
+	Users.signup = function(email, password, firstName, lastName, consented, phone, userTypeId, preferredName) {
 		let signupAction = new Promise((resolve, reject) => {	
 			Users.find({where: {email}})
 			.then(function(user) {
@@ -97,7 +98,7 @@ export default function(sequelize, Sequelize) {
 						consented,
 						preferredName: preferredName,
 						phone,
-						user_type
+						userTypeId
 					}
 					Users.create(newUser)
 					.then(function(result) {

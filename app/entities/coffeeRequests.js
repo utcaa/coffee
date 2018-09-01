@@ -1,4 +1,5 @@
 import entities from '../entities'
+import uuid from 'uuid'
 
 export default function(sequelize, Sequelize) {
 	let CoffeeRequests = sequelize.define('CoffeeRequests', {
@@ -6,6 +7,11 @@ export default function(sequelize, Sequelize) {
 			type: Sequelize.INTEGER(11),
 			primaryKey: true,
 			autoIncrement: true,
+			allowNull: false,
+			isUnique: true
+		},
+		uuid: {
+			type: Sequelize.STRING(45),
 			allowNull: false,
 			isUnique: true
 		},
@@ -23,7 +29,22 @@ export default function(sequelize, Sequelize) {
 			type: Sequelize.INTEGER(11),
 			allowNull: false,
 			field: "status_id"
-		}
+		},
+		goal: {
+			type: Sequelize.STRING(255),
+			allowNull: false,
+			defaultValue: ''
+		},
+		challenge: {
+			type: Sequelize.STRING(255),
+			allowNull: false,
+			defaultValue: ''
+		},
+		comments: {
+			type: Sequelize.STRING(255),
+			allowNull: false,
+			defaultValue: ''
+		},
 	}, {
 		tableName: 'coffee_requests',
 		timestamps: true,
@@ -35,5 +56,10 @@ export default function(sequelize, Sequelize) {
 	CoffeeRequests.associate = function(entities) {
 		CoffeeRequests.belongsTo(entities.CoffeeRequestStatus)
 	}
+	
+	CoffeeRequests.beforeValidate((entity, options) => {
+		if (!entity.uuid) entity.uuid = uuid.v4()
+	})
+
 	return CoffeeRequests
 }

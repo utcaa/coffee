@@ -16,11 +16,6 @@ router.post('/request', function(req, res, next) {
 		res.response = {result:false, exception: "interest_industry_id is required but not given."}
 		next()
 	}
-	if (!req.body.second_interest_industry_id) {
-		console.log('student_id id is required but not given.')
-		res.response = {result:false, exception: "student_id is required but not given."}
-		next()
-	}
 	if (!req.body.interest_role_id) {
 		console.log('interest_role_id id is required but not given.')
 		res.response = {result:false, exception: "interest_role_id is required but not given."}
@@ -32,8 +27,16 @@ router.post('/request', function(req, res, next) {
 		next()
 	}
 	chatServices.request(req.body.student_id, req.body.interest_industry_id, 
-							req.body.interest_role_id, req.body.location_id, 
-							req.body.second_interest_industry_id)
+							req.body.interest_role_id, req.body.location_id, {
+							secondaryIndustryId: req.body.second_interest_industry_id })
+	.then(function(result) {
+		res.response = {result:result}
+		next()
+	}).catch(function(err) {
+		console.log(err)
+		res.response = {result:false, exception: err.message}
+		next()
+	})
 })
 
 export default router
