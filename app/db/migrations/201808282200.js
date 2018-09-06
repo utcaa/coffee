@@ -4,7 +4,7 @@ module.exports = {
 
 up: function(queryInterface, Sequelize) {
 	return queryInterface.createTable(
-		'roles', {
+		'coffee_request_status', {
 		id: {
 			type: Sequelize.INTEGER(11),
 			primaryKey: true,
@@ -18,7 +18,7 @@ up: function(queryInterface, Sequelize) {
 		}
 	}).then(function() {
 		return queryInterface.createTable(
-		'industries', {
+		'coffee_requests', {
 		id: {
 			type: Sequelize.INTEGER(11),
 			primaryKey: true,
@@ -26,35 +26,12 @@ up: function(queryInterface, Sequelize) {
 			allowNull: false,
 			isUnique: true
 		},
-		name: {
+		uuid: {
 			type: Sequelize.STRING(45),
-			allowNull: false
-		}
-	})}).then(function() {
-		return queryInterface.createTable(
-		'work_experience', {
-		id: {
-			type: Sequelize.INTEGER(11),
-			primaryKey: true,
-			autoIncrement: true,
 			allowNull: false,
 			isUnique: true
 		},
-		industry_id: {
-			type: Sequelize.INTEGER(11),
-			isUnique: false,
-			allowNull: false,
-			references: {
-				model: 'industries',
-				key: 'id'
-			}
-		},
-		company: {
-			type: Sequelize.STRING(180),
-			allowNull: false,
-			defaultValue: ''
-		},
-		user_id: {
+		student_id: {
 			type: Sequelize.INTEGER(11),
 			allowNull: false,
 			references: {
@@ -62,33 +39,36 @@ up: function(queryInterface, Sequelize) {
 				key: 'id'
 			}
 		},
-		role_id: {
+		professional_id: {
 			type: Sequelize.INTEGER(11),
-			allowNull: false,
+			allowNull: true,
 			references: {
-				model: 'roles',
+				model: 'users',
 				key: 'id'
 			}
 		},
-		location_id: {
+		status_id: {
 			type: Sequelize.INTEGER(11),
-			allowNull: false
+			allowNull: false,
+			references: {
+				model: 'coffee_request_status',
+				key: 'id'
+			}
 		},
-		start_year: {
-			type: Sequelize.STRING(45),
-			allowNull: false
+		goal: {
+			type: Sequelize.STRING(255),
+			allowNull: false,
+			defaultValue: ''
 		},
-		start_month: {
-			type: Sequelize.STRING(45),
-			allowNull: false
+		challenge: {
+			type: Sequelize.STRING(255),
+			allowNull: false,
+			defaultValue: ''
 		},
-		end_year: {
-			type: Sequelize.STRING(45),
-			allowNull: false
-		},
-		end_month: {
-			type: Sequelize.STRING(45),
-			allowNull: false
+		comments: {
+			type: Sequelize.STRING(255),
+			allowNull: false,
+			defaultValue: ''
 		},
 		created_at: {
 			type: Sequelize.DATE,
@@ -100,13 +80,12 @@ up: function(queryInterface, Sequelize) {
 			allowNull: false,
 			defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
 		}
-		})
+	})
 })
 },
 
 down: function (queryInterface, Sequelize) {
-	return queryInterface.dropTable('work_experience')
-	.then(queryInterface.dropTable('industries'))
-	.then(queryInterface.dropTable('roles'))
+	return queryInterface.dropTable('coffee_requests')
+	.then(queryInterface.dropTable('coffee_request_status'))
 }
 }

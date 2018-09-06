@@ -205,6 +205,6 @@ module.exports = {
 			queryInterface.sequelize.query(
 				'DELETE FROM continents where id > 0;'
 			)
-		];
+		]
 	}
-};
+}

@@ -35,5 +35,9 @@ export default function(sequelize, Sequelize) {
 		return Cities.find({where: {id}})
 	}
 
+	Cities.list = function() {
+		return Cities.findAll();
+	}
+
 	return Cities
 }

@@ -1,7 +1,8 @@
 import express from 'express'
 import entities from '../entities'
-import userService from '../services/userService'
+import userServices from '../services/userServices'
 import { USER_ID_COOKIE, EMAIL_COOKIE, SESSION_ID_COOKIE } from '../util/cookieHelpers'
+import run from '../jobs/importProfessionalsFromBsv'
 
 let router = express.Router()
 
@@ -30,13 +31,13 @@ router.post('/signup', function(req, res, next) {
 		console.log('User phone is required but not given.')
 		res.response = {result:false, exception: "User phonenumber is required but not given."}
 		next()
-	} if (!req.body.user_type) {
-		console.log('User type is required but not given.')
-		res.response = {result:false, exception: "User type is required but not given."}
+	} if (!req.body.user_type_id) {
+		console.log('User type id is required but not given.')
+		res.response = {result:false, exception: "User type id is required but not given."}
 		next()
 	}
 	const data = req.body
-	entities.Users.signup(data.email, data.password, data.first_name, data.last_name, data.consented, data.phone, data.user_type, data.preferred_name)
+	entities.Users.signup(data.email, data.password, data.first_name, data.last_name, data.consented, data.phone, data.user_type_id, data.preferred_name)
 	.then(function(result) {
 		res.response = {result:true}
 		next()
@@ -48,35 +49,37 @@ router.post('/signup', function(req, res, next) {
 })
 
 router.post('/:user_id/professional_experience', function(req, res, next) {
-	const userId = req.params.userId;
-	if (!req.body.role_id) {
-		console.log('Role id is required but not given.')
-		res.response = {result:false, exception: "Role id is required but not given."}
-		next()
+	const userId = req.params.user_id;
+	const workExperiences = req.body.experiences
+	for(const experience of workExperiences) {
+		if (!experience.role_id) {
+			console.log('Role id is required but not given.')
+			res.response = {result:false, exception: "Role id is required but not given."}
+			next()
+		}
+		if (!experience.location_id) {
+			console.log('Location id is required but not given.')
+			res.response = {result:false, exception: "Location id is required but not given."}
+			next()
+		}
+		if (!experience.industry_id) {
+			console.log('Industry id is required but not given.')
+			res.response = {result:false, exception: "Industry id is required but not given."}
+			next()
+		}
+		if (!experience.start_year || isNaN(experience.start_year)) {
+			console.log('Start year is required but not given.')
+			res.response = {result:false, exception: "Start year is required but not given."}
+			next()
+		}
+		if (!experience.start_month || isNaN(experience.start_month)) {
+			console.log('Start month is required but not given.')
+			res.response = {result:false, exception: "Start month is required but not given."}
+			next()
+		}
+		experience.user_id = userId
 	}
-	if (!req.body.location_id) {
-		console.log('Location id is required but not given.')
-		res.response = {result:false, exception: "Location id is required but not given."}
-		next()
-	}
-	if (!req.body.industry_id) {
-		console.log('Industry id is required but not given.')
-		res.response = {result:false, exception: "Industry id is required but not given."}
-		next()
-	}
-	if (!req.body.start_year || isNaN(req.body.start_year)) {
-		console.log('Start year is required but not given.')
-		res.response = {result:false, exception: "Start year is required but not given."}
-		next()
-	}
-	if (!req.body.start_month || isNaN(req.body.start_month)) {
-		console.log('Start month is required but not given.')
-		res.response = {result:false, exception: "Start month is required but not given."}
-		next()
-	}
-	const data = req.body
-	userService.addWorkExperience(data.industry_id, req.params.user_id, data.role_id, data.location_id, 
-									data.start_year, data.start_month, data.end_year, data.end_month)
+	userServices.addWorkExperiences(workExperiences)
 		.then(result => {
 			res.response = {result:true}
 			next()
@@ -85,6 +88,12 @@ router.post('/:user_id/professional_experience', function(req, res, next) {
 			res.response = {result:false, exception: err.message}
 			next()
 		})
+})
+
+router.post('/professionals/from-csv', function(req, res, next) {
+	run()
+	res.response = {result:true}
+	next()
 })
 
 export default router
