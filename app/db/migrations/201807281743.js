@@ -49,6 +49,11 @@ up: function(queryInterface, Sequelize) {
 				key: 'id'
 			}
 		},
+		company: {
+			type: Sequelize.STRING(180),
+			allowNull: false,
+			defaultValue: ''
+		},
 		user_id: {
 			type: Sequelize.INTEGER(11),
 			allowNull: false,

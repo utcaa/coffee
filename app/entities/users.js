@@ -81,7 +81,10 @@ export default function(sequelize, Sequelize) {
 		return Users.find(criteria)
 	}
 
-	Users.signup = function(email, password, firstName, lastName, consented, phone, userTypeId, preferredName) {
+	Users.signup = async function(email, password, firstName, lastName, consented, phone, userTypeId, preferredName) {
+		console.log("!!!!!!!!!!!!!!!!")
+		console.log(email)
+		console.log("!!!!!!!!!!!!!!!!")
 		let signupAction = new Promise((resolve, reject) => {	
 			Users.find({where: {email}})
 			.then(function(user) {

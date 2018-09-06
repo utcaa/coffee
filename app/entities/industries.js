@@ -21,7 +21,7 @@ export default function(sequelize, Sequelize) {
 	/**above are DB settings of the entity. below are 
 	the business logics of AccountActionType entity.
 	**/
-	Industries.getByName = function(value) {
+	Industries.getByName = async function(value) {
 		return Industries.find({where: {name: value}})
 	}
 

@@ -25,6 +25,11 @@ export default function(sequelize, Sequelize) {
 			allowNull: false,
 			field: "role_id"
 		},
+		company: {
+			type: Sequelize.STRING(180),
+			allowNull: true,
+			defaultValue: ''
+		},
 		locationId: {
 			type: Sequelize.STRING(45),
 			allowNull: false,

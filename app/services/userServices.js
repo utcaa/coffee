@@ -8,7 +8,7 @@ function addWorkExperiences(experiences) {
 	return Promise.all(allPromises)
 }
 
-function addWorkExperience(industryId, userUUId, roleId, locationId, startYear, startMonth, endYear = "0", endMonth = "0") {
+async function addWorkExperience(industryId, userUUId, roleId, company, locationId, startYear, startMonth, endYear = "0", endMonth = "0") {
 	return new Promise((resolve, reject) => {
 		entities.Industries.getById(industryId)
 			.then(industry => {
@@ -41,6 +41,7 @@ function addWorkExperience(industryId, userUUId, roleId, locationId, startYear, 
 												industryId,
 												userId: user.id,
 												roleId,
+												company,
 												locationId,
 												startYear,
 												startMonth,
