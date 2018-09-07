@@ -1,22 +1,23 @@
 import entities from '../entities'
-import { addDays } from '../utils/dateHandlers.js'
+import { addDays } from '../utils/dateHandlers'
+import logger from '../utils/logger'
 
 export function isAuthenticated(uuId, email, sessionId) {
 	let authenticateAction = new Promise((resolve, reject) => {
 		if (!uuId || !email || !sessionId) {
-			console.log('user authentication info is not provided.')
+			logger.error('user authentication info is not provided.')
 			reject(new Error('user authentication info is not provided.'))
 		} else {
 			const emailData = email.replace("%40", "@")
 			entities.UserSessions.findActiveSessionsByUser(emailData, uuId, sessionId)
 			.then(function(session) {
 				if (!session) {
-					console.log("No active session for given user of uuid: " + uuId)
+					logger.error("No active session for given user of uuid: " + uuId)
 					reject(new Error("No active session for given user of uuid: " + uuId))
 				} else {
 					session.update({expireAt:addDays(new Date(), 2)})
 					.then(function() {
-						console.log("session " + sessionId + " for user " + uuId + " is now refreshed.")
+						logger.info("session " + sessionId + " for user " + uuId + " is now refreshed.")
 						resolve(true)
 					})
 				}

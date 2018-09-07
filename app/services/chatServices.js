@@ -60,12 +60,7 @@ function request(studentId, industryId, roleId, locationId, { secondaryIndustryI
 							reject(err)
 						})
 					} else if (experience && experience.length) {
-						console.log(experience[0])
-						const professionals = await entities.RequestCounts.listRequestCountsByUserIds(experience.map(exp => {
-
-						console.log("!!!!!")
-						console.log(exp.userId)
-							return exp.userId}))
+						const professionals = await entities.RequestCounts.listRequestCountsByUserIds(experience.map(exp => { return exp.userId }))
 						const professionalId = (!professionals || !professionals.length) ? experience[0].userId : professionals[0].userId
 						entities.CoffeeRequests.create({
 							studentId: student.id,

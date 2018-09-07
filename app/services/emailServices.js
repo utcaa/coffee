@@ -1,4 +1,5 @@
-const emailServer = require('../util/emailServer.js')
+const emailServer = require('../util/emailServer')
+const logger = require('../util/logger')
 
 const send = (data) => {
 	sendWithRetry(data, 0)
@@ -8,7 +9,7 @@ const sendWithRetry = (data, count) => {
 	const retryCount = 3
 	emailServer.connect().send(data, (err, msg) => {
 		if (err) {
-			console.log(err)
+			logger.error(err)
 			if (count < retryCount) {
 				send(data, count++)
 			} else {

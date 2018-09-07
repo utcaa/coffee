@@ -1,6 +1,7 @@
 import entities from '../entities'
 import { hash, compare } from '../security/bcryptor'
 import uuid from 'uuid'
+import logger from '../util/logger'
 
 export default function(sequelize, Sequelize) {
 	let Users = sequelize.define('Users', {
@@ -120,7 +121,7 @@ export default function(sequelize, Sequelize) {
 					reject(new Error('User with given email already exist.'))
 				}
 			}).catch(function(uErr) {
-				console.log(uErr)
+				logger.error(uErr)
 				reject(uErr)
 			})
 		})
