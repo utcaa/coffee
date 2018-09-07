@@ -7,7 +7,6 @@ async function run() {
 	let count = 0
 	csvParser({delimiter: "|"}).fromFile('./app/files/professionals.bsv')
 	.then(async professionals => {
-
 		for (let count = 0; count < professionals.length; count++) {
 			const professional = professionals[count]
 			let user
@@ -24,6 +23,7 @@ async function run() {
 				result = userService.addWorkExperience(industry.id, user.uuid, role.id, professional['Employers'], 4089, 2010, 1)
 				console.log(result)
 			} catch(err) {
+				console.log(err)
 				errorData.push({email: professional['Email']})
 			}
 		}

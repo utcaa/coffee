@@ -55,6 +55,7 @@ export default function(sequelize, Sequelize) {
 	/**above are DB settings of the entity. below are 
 	the business logics of userSessions entity.
 	**/
+	
 	UserSessions.findActiveSessionsByUser = function(email, uuId, sessionId) {
 		const now = new Date()
 		let findAction = new Promise((resolve, reject) => {

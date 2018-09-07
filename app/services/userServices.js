@@ -36,7 +36,6 @@ async function addWorkExperience(industryId, userUUId, roleId, company, location
 											if (endYear != 0 && (endYear < startYear || (endYear === startYear && endMonth < startMonth))) {
 												reject(Error('Invalid start and end time. End time must not be earlier than start time.'))
 											}
-											console.log(arguments)
 											return entities.WorkExperience.create({
 												industryId,
 												userId: user.id,

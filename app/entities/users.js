@@ -78,13 +78,10 @@ export default function(sequelize, Sequelize) {
 	}
 	
 	Users.getByCriteria = function(criteria) {
-		return Users.find(criteria)
+		return Users.find({where: criteria})
 	}
 
 	Users.signup = async function(email, password, firstName, lastName, consented, phone, userTypeId, preferredName) {
-		console.log("!!!!!!!!!!!!!!!!")
-		console.log(email)
-		console.log("!!!!!!!!!!!!!!!!")
 		let signupAction = new Promise((resolve, reject) => {	
 			Users.find({where: {email}})
 			.then(function(user) {
@@ -109,7 +106,7 @@ export default function(sequelize, Sequelize) {
 						.then(function(aat) {
 							entities.UserHistory.add(result.id, aat.id)
 							.then(function(uhAddResult) {
-								resolve(true)
+								resolve({result: true, uuid: uuidv4})
 							}).catch(function(uhErr) {
 								reject(uhErr)
 							})
@@ -120,7 +117,7 @@ export default function(sequelize, Sequelize) {
 						reject(err)
 					})
 				} else {
-					reject(Error('User with given email already exist.'))
+					reject(new Error('User with given email already exist.'))
 				}
 			}).catch(function(uErr) {
 				console.log(uErr)
@@ -135,7 +132,7 @@ export default function(sequelize, Sequelize) {
 			Users.find({where: {email}})
 			.then(function(user) {
 				if (!user) {
-					reject(Error('User with given email does not exist.'))
+					reject(new Error('User with given email does not exist.'))
 				} else {
 					if(compare(password, user.password)) {
 						//password is correct. save a new session record.
