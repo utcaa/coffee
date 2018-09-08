@@ -77,6 +77,7 @@ async function importFrom(file) {
 		csvParser({delimiter: "|"}).fromFile(file)
 		.then(async professionals => {
 			const errorData = []
+			const successData = []
 			for (let count = 0; count < professionals.length; count++) {
 				const professional = professionals[count]
 				let user
@@ -86,19 +87,17 @@ async function importFrom(file) {
 					user = await entities.Users.signup(professional['Email'], '111111', professional['First Name'], professional['Last Name'], true, '0000000000', 1, professional['Preferred Name'], {uuid: 'uuid'})
 					role = await entities.Roles.getByName(professional['current function'])
 					industry = await entities.Industries.getByName(professional['current industry'])
-					await addWorkExperience(industry.id, user.uuid, role.id, professional['Employers'], 4089, 2010, 1)
+					successData.push(await addWorkExperience(industry.id, user.uuid, role.id, professional['Employers'], 4089, 2010, 1))
 				} catch(err) {
 					errorData.push({email: professional['Email'], err})
 				}
 			}
 			console.log("........................")
+			console.log(successData)
+			console.log("........................")
 			console.log(errorData)
 			console.log("........................")
-			if (!errorData.length) {
-				resolve(professionals.length)
-			} else {
-				reject(errorData)
-			}
+			resolve({successData, errorData})
 		})
 	})
 }
