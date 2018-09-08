@@ -6,6 +6,7 @@ async function buldRequest(requests) {
 		csvParser({delimiter: "|"}).fromFile('./app/files/request2.bsv')
 		.then(async data => {
 			const errorData = []
+			const successData = []
 			for (let count = 0; count < data.length; count++) {
 				const req = data[count]
 				try {
@@ -22,21 +23,18 @@ async function buldRequest(requests) {
 					const roleId = role.id
 					const student = await entities.Users.signup(req['UTmail'], '111111', req['First Name'], req['Last Name'], true, '0000000000', 2, req['Preferred Name'], {uuid: 'uuid', id: 'id'})
 					console.log(student)
-					await request(student.uuid, industryId, roleId, 4089,
+					successData.push(await request(student.uuid, industryId, roleId, 4089,
 							{ goal: req['Coffe chat goals'], comments: req['additional comments'], 
-								challenge: req['Challenges'] })
+								challenge: req['Challenges'] }))
 				} catch(err) {
 					errorData.push({email: req['UTmail'], err})
 				}
 			}
 			console.log("........................")
+			console.log(successData)
+			console.log("........................")
 			console.log(errorData)
 			console.log("........................")
-			if (!errorData.length) {
-				resolve(data.length)
-			} else {
-				reject(errorData)
-			}
 		})
 	})
 }
