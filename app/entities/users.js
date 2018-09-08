@@ -1,6 +1,7 @@
 import entities from '../entities'
 import { hash, compare } from '../security/bcryptor'
 import uuid from 'uuid'
+import logger from '../util/logger'
 
 export default function(sequelize, Sequelize) {
 	let Users = sequelize.define('Users', {
@@ -78,13 +79,10 @@ export default function(sequelize, Sequelize) {
 	}
 	
 	Users.getByCriteria = function(criteria) {
-		return Users.find(criteria)
+		return Users.find({where: criteria})
 	}
 
-	Users.signup = async function(email, password, firstName, lastName, consented, phone, userTypeId, preferredName) {
-		console.log("!!!!!!!!!!!!!!!!")
-		console.log(email)
-		console.log("!!!!!!!!!!!!!!!!")
+	Users.signup = async function(email, password, firstName, lastName, consented, phone, userTypeId, preferredName, attributes) {
 		let signupAction = new Promise((resolve, reject) => {	
 			Users.find({where: {email}})
 			.then(function(user) {
@@ -109,7 +107,11 @@ export default function(sequelize, Sequelize) {
 						.then(function(aat) {
 							entities.UserHistory.add(result.id, aat.id)
 							.then(function(uhAddResult) {
-								resolve(true)
+								const response = {result: true}
+								for(const attr in attributes) {
+									response[attr] = result[attr]
+								}
+								resolve(response)
 							}).catch(function(uhErr) {
 								reject(uhErr)
 							})
@@ -120,10 +122,10 @@ export default function(sequelize, Sequelize) {
 						reject(err)
 					})
 				} else {
-					reject(Error('User with given email already exist.'))
+					reject(new Error('User with given email already exist.'))
 				}
 			}).catch(function(uErr) {
-				console.log(uErr)
+				logger.error(uErr)
 				reject(uErr)
 			})
 		})
@@ -135,7 +137,7 @@ export default function(sequelize, Sequelize) {
 			Users.find({where: {email}})
 			.then(function(user) {
 				if (!user) {
-					reject(Error('User with given email does not exist.'))
+					reject(new Error('User with given email does not exist.'))
 				} else {
 					if(compare(password, user.password)) {
 						//password is correct. save a new session record.

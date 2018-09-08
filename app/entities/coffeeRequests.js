@@ -25,6 +25,26 @@ export default function(sequelize, Sequelize) {
 			allowNull: true,
 			field: "professional_id"
 		},
+		interestedIndustryId: {
+			type: Sequelize.INTEGER(11),
+			allowNull: true,
+			field: "interested_industry_id"
+		},
+		secondaryInterestedIndustryId: {
+			type: Sequelize.INTEGER(11),
+			allowNull: true,
+			field: "secondary_interested_industry_id"
+		},
+		interestedRoleId: {
+			type: Sequelize.INTEGER(11),
+			allowNull: false,
+			field: "interested_role_id"
+		},
+		locationId: {
+			type: Sequelize.INTEGER(11),
+			allowNull: false,
+			field: "location_id"
+		},
 		statusId: {
 			type: Sequelize.INTEGER(11),
 			allowNull: false,

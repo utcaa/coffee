@@ -16,7 +16,4 @@ node ./app/db/scripts/sequelizeConfig.js
 echo "starting migration"
 node_modules/.bin/sequelize db:migrate
 
-echo "starting seeders"
-node_modules/.bin/sequelize db:seed:all
-
 npm start
