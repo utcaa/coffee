@@ -1,4 +1,5 @@
 import entities from '../entities'
+const csvParser = require("csvtojson")
 
 function addWorkExperiences(experiences) {
 	const allPromises = []
@@ -71,7 +72,39 @@ async function addWorkExperience(industryId, userUUId, roleId, company, location
 	})
 }
 
+async function importFrom(file) {
+	return new Promise((resolve, reject) => {
+		csvParser({delimiter: "|"}).fromFile(file)
+		.then(async professionals => {
+			const errorData = []
+			for (let count = 0; count < professionals.length; count++) {
+				const professional = professionals[count]
+				let user
+				let role
+				let industry
+				try {
+					user = await entities.Users.signup(professional['Email'], '111111', professional['First Name'], professional['Last Name'], true, '0000000000', 1, professional['Preferred Name'], {uuid: 'uuid'})
+					role = await entities.Roles.getByName(professional['current function'])
+					industry = await entities.Industries.getByName(professional['current industry'])
+					await addWorkExperience(industry.id, user.uuid, role.id, professional['Employers'], 4089, 2010, 1)
+				} catch(err) {
+					errorData.push({email: professional['Email'], err})
+				}
+			}
+			console.log("........................")
+			console.log(errorData)
+			console.log("........................")
+			if (!errorData.length) {
+				resolve(professionals.length)
+			} else {
+				reject(errorData)
+			}
+		})
+	})
+}
+
 module.exports = {
 	addWorkExperiences,
-	addWorkExperience
+	addWorkExperience,
+	importFrom
 }

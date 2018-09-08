@@ -82,7 +82,7 @@ export default function(sequelize, Sequelize) {
 		return Users.find({where: criteria})
 	}
 
-	Users.signup = async function(email, password, firstName, lastName, consented, phone, userTypeId, preferredName) {
+	Users.signup = async function(email, password, firstName, lastName, consented, phone, userTypeId, preferredName, attributes) {
 		let signupAction = new Promise((resolve, reject) => {	
 			Users.find({where: {email}})
 			.then(function(user) {
@@ -107,7 +107,11 @@ export default function(sequelize, Sequelize) {
 						.then(function(aat) {
 							entities.UserHistory.add(result.id, aat.id)
 							.then(function(uhAddResult) {
-								resolve({result: true, uuid: uuidv4})
+								const response = {result: true}
+								for(const attr in attributes) {
+									response[attr] = result[attr]
+								}
+								resolve(response)
 							}).catch(function(uhErr) {
 								reject(uhErr)
 							})

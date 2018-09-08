@@ -1,20 +1,49 @@
 import entities from '../entities'
+const csvParser = require("csvtojson")
 
-function buldRequest(requests) {
-	const allPromises = []
-	requests.map(req => {
-		allPromises.push(request(req.student_id, req.interest_industry_id, 
-							req.interest_role_id, req.location_id,
-							{ secondaryIndustryId: req.second_interest_industry_id, 
-									goal: req.goal, comments: req.comments, 
-									challenge: req.challenge }))
+async function buldRequest(requests) {
+	return new Promise((resolve, reject) => {
+		csvParser({delimiter: "|"}).fromFile('./app/files/request2.bsv')
+		.then(async data => {
+			const errorData = []
+			for (let count = 0; count < data.length; count++) {
+				const req = data[count]
+				try {
+					let industry = await entities.Industries.getByName(req['Recent/Interested Industry'])
+					if (!industry) {
+						industry = await entities.Industries.create({name: req['Recent/Interested Industry']})
+					}
+					const industryId = industry.id
+
+					let role = await entities.Roles.getByName(req['Recent/Interested Role'])
+					if (!role) {
+						role = await entities.Roles.create({name: req['Recent/Interested Role']})
+					}
+					const roleId = role.id
+					const student = await entities.Users.signup(req['UTmail'], '111111', req['First Name'], req['Last Name'], true, '0000000000', 2, req['Preferred Name'], {uuid: 'uuid', id: 'id'})
+					console.log(student)
+					await request(student.uuid, industryId, roleId, 4089,
+							{ goal: req['Coffe chat goals'], comments: req['additional comments'], 
+								challenge: req['Challenges'] })
+				} catch(err) {
+					errorData.push({email: req['UTmail'], err})
+				}
+			}
+			console.log("........................")
+			console.log(errorData)
+			console.log("........................")
+			if (!errorData.length) {
+				resolve(data.length)
+			} else {
+				reject(errorData)
+			}
+		})
 	})
-	return Promise.all(allPromises)
 }
 
 function request(studentId, industryId, roleId, locationId, { secondaryIndustryId, goal, challenge, comments }) {
 	return new Promise((resolve, reject) => {
-		entities.Users.getByCriteria({uuid: studentId, userTypeId: 3})
+		entities.Users.find({where:{uuid: studentId}})
 		.then(student => {
 			if (!student) {
 				reject(new Error('request student not found.'))
@@ -35,9 +64,17 @@ function request(studentId, industryId, roleId, locationId, { secondaryIndustryI
 									studentId: student.id,
 									professionalId: null,
 									statusId: 2, //pending
+									interestedIndustryId: industryId,
+									secondaryInterestedIndustryId: secondaryIndustryId,
+									interestedRoleId: roleId,
+									locationId,
 									goal,
 									challenge,
 									comments,
+								}).then(function(result) {
+									resolve(result)
+								}).catch(err => {
+									reject(err)
 								})
 							} else {
 								const professionals = await entities.RequestCounts.listRequestCoundsByUserIds(experience2.map(exp => {return exp.userId}))
@@ -46,12 +83,16 @@ function request(studentId, industryId, roleId, locationId, { secondaryIndustryI
 									studentId: student.id,
 									professionalId,
 									statusId: 3, //completed
+									interestedIndustryId: industryId,
+									secondaryInterestedIndustryId: secondaryIndustryId,
+									interestedRoleId: roleId,
+									locationId,
 									goal,
 									challenge,
 									comments,
 								}).then(function(result) {
 									entities.RequestCounts.newRequest(professionalId, 1)
-									resolve(result.id)
+									resolve(result)
 								}).catch(err => {
 									reject(err)
 								})
@@ -66,6 +107,10 @@ function request(studentId, industryId, roleId, locationId, { secondaryIndustryI
 							studentId: student.id,
 							professionalId,
 							statusId: 3, //completed
+							interestedIndustryId: industryId,
+							secondaryInterestedIndustryId: secondaryIndustryId,
+							interestedRoleId: roleId,
+							locationId,
 							goal,
 							challenge,
 							comments,
@@ -80,9 +125,17 @@ function request(studentId, industryId, roleId, locationId, { secondaryIndustryI
 							studentId: student.id,
 							professionalId: null,
 							statusId: 2, //pending
+							interestedIndustryId: industryId,
+							secondaryInterestedIndustryId: secondaryIndustryId,
+							interestedRoleId: roleId,
+							locationId,
 							goal,
 							challenge,
 							comments,
+						}).then(function(result) {
+							resolve(result)
+						}).catch(err => {
+							reject(err)
 						})
 					}
 				}).catch(err => {

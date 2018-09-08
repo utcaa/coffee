@@ -2,7 +2,6 @@ import express from 'express'
 import entities from '../entities'
 import userServices from '../services/userServices'
 import { USER_ID_COOKIE, EMAIL_COOKIE, SESSION_ID_COOKIE } from '../util/cookieHelpers'
-import run from '../jobs/importProfessionalsFromBsv'
 import logger from '../util/logger'
 
 let router = express.Router()
@@ -92,9 +91,15 @@ router.post('/:user_id/professional_experience', function(req, res, next) {
 })
 
 router.post('/professionals/from-csv', function(req, res, next) {
-	run()
-	res.response = {result:true}
-	next()
+	userServices.importFrom('./app/files/professionals.bsv')
+	.then(result => {
+		res.response = {result: true, data: result}
+		next()
+	}).catch(err => {
+		logger.error(err)
+		res.response = {result:false, exception: err.message}
+		next()
+	})
 })
 
 export default router

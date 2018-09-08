@@ -1,4 +1,3 @@
-const csvParser = require("csvtojson")
 import express from 'express'
 import chatServices from '../services/chatServices'
 import logger from '../util/logger'
@@ -34,7 +33,7 @@ router.post('/request', function(req, res, next) {
 									goal: req.body.goal, comments: req.body.comments, 
 									challenge: req.body.challenge })
 	.then(function(result) {
-		res.response = {result:result}
+		res.response = {result}
 		next()
 	}).catch(function(err) {
 		logger.error(err)
@@ -44,12 +43,13 @@ router.post('/request', function(req, res, next) {
 })
 
 router.post('/request/from-csv', function(req, res, next) {
-	const csvData = []
-	let count = 0
-	csvParser({delimiter: "|"}).fromFile('./app/files/request.bsv')
-	.then(data => {
-		chatServices.buldRequest(data)
-		res.response = {result: data.length}
+	chatServices.buldRequest()
+	.then(results => {
+		res.response = {result: true, data: results}
+		next()
+	}).catch(err => {
+		logger.error(err)
+		res.response = {result:false, exception: err.message}
 		next()
 	})
 })
